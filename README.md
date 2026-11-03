@@ -441,3 +441,91 @@ tail -n 5 bash.txt      # últimas 5 líneas
 | «archivo vacío, cuántas líneas» | `wc -l vacio.txt` (da 0) |
 
 **Tuberías (`|`):** la salida de un comando entra en el siguiente. Ej.: `grep -i "bash" archivo.txt | wc -l` cuenta cuántas líneas contienen bash.
+
+## 10. Examen: Killercoda, Git y entrega
+
+### Cómo funciona la prueba
+
+- Dos escenarios en Killercoda, cada uno en una sesión distinta (~30 min y ~60 min).
+- **Al cambiar de escenario se pierden los archivos.** Antes de salir, guarda y sube el trabajo al repositorio.
+- Antes de empezar cada escenario hay que ejecutar su script de inicialización (`inicializar_escenario1.sh` / `inicializar_escenario2.sh`).
+- Para ejecutar un script en Killercoda: **crear** el archivo → **editarlo** (`nano`) → **permisos** (`chmod +x nombre.sh`) → **ejecutar** (`./nombre.sh`).
+
+### Estructura que hay que crear en el repositorio
+
+```
+examen-bash/
+├── ejercicio1/
+│   └── comandos.md
+├── ejercicio2/
+│   └── comandos.md
+├── ejercicio3/
+│   ├── comprobar.sh
+│   └── pruebas.md
+└── ejercicio4/
+    ├── inventario.sh
+    └── pruebas.md
+```
+
+```bash
+mkdir -p examen-bash/ejercicio{1,2,3,4}      # {1,2,3,4} crea las cuatro carpetas
+touch examen-bash/ejercicio1/comandos.md examen-bash/ejercicio2/comandos.md
+touch examen-bash/ejercicio3/comprobar.sh examen-bash/ejercicio3/pruebas.md
+touch examen-bash/ejercicio4/inventario.sh examen-bash/ejercicio4/pruebas.md
+chmod +x examen-bash/ejercicio3/comprobar.sh examen-bash/ejercicio4/inventario.sh
+tree examen-bash                              # comprobar el resultado
+```
+
+### Git: lo mínimo para entregar
+
+```bash
+git config --global user.name "Tu Nombre"      # una sola vez por máquina
+git config --global user.email "tu@correo.com"
+git clone <url-del-repositorio>                # descargar tu repo (solo la primera vez)
+cd nombre-del-repo
+git status                                     # qué ha cambiado
+git add .                                      # preparar todos los cambios
+git commit -m "Ejercicio 1 terminado"          # guardar una versión con mensaje
+git push                                       # subir a GitHub
+git pull                                       # bajar cambios de GitHub
+git log --oneline                              # historial resumido
+```
+
+- Orden de siempre: **`add` → `commit` → `push`**. Si falta alguno, el trabajo no llega a GitHub.
+- `git status` antes y después: te dice qué falta por subir.
+- Haz `commit` y `push` **al terminar cada ejercicio**, no solo al final, para no perder nada si se cierra la sesión.
+- GitHub no admite la contraseña de la cuenta en `git push`: se usa un *token de acceso personal* o una clave SSH. Prepáralo antes del examen y comprueba que puedes hacer `push` desde Killercoda.
+
+### Documentar en Markdown (`comandos.md`, `pruebas.md`)
+
+````markdown
+# Ejercicio 1
+
+## Apartado 1: listar archivos ocultos
+
+```bash
+ls -a
+```
+
+Resultado: se muestran también los archivos que empiezan por punto.
+````
+
+| Sintaxis | Resultado |
+|---|---|
+| `# Título` / `## Subtítulo` | encabezados |
+| `` `texto` `` | código dentro de una frase |
+| Tres acentos graves + `bash` ... tres acentos graves | bloque de código |
+| `- elemento` | lista |
+| `**negrita**` | negrita |
+
+- En `comandos.md`: pon el enunciado, el comando usado y una línea explicando qué hace.
+- En `pruebas.md`: pon cada prueba (qué ejecutaste y qué salida obtuviste). Pega la salida real de la terminal.
+
+### Checklist antes de dar por terminado un escenario
+
+- Script de inicialización ejecutado al empezar.
+- Estructura `examen-bash/` creada con los nombres exactos.
+- Scripts con `#!/bin/bash` y permiso `chmod +x`.
+- Scripts probados con varios casos (correctos, errores, sin parámetros).
+- `comandos.md` y `pruebas.md` rellenados.
+- `git add .`, `git commit`, `git push` hechos y comprobados en GitHub.
