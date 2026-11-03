@@ -5,7 +5,7 @@
 ## 1. Navegación y consulta del sistema
 
 | Comando | Qué hace | Ejemplo |
-| --- | --- | --- |
+|---|---|---|
 | `pwd` | Muestra dónde estás | `pwd` |
 | `ls` | Lista el contenido | `ls` |
 | `ls -a` | Incluye archivos ocultos (empiezan por `.`) | `ls -a` |
@@ -51,7 +51,7 @@ nano tareas.txt                              # editor de texto
 ### Nano: teclas básicas
 
 | Acción | Teclas |
-| --- | --- |
+|---|---|
 | Guardar | `Ctrl+O` y luego `Enter` |
 | Salir | `Ctrl+X` |
 | Cortar línea / pegar | `Ctrl+K` / `Ctrl+U` |
@@ -87,7 +87,7 @@ Salida de `ls -l`:
 ```
 
 | Letra | Significado | Valor |
-| --- | --- | --- |
+|---|---|---|
 | `r` | lectura | 4 |
 | `w` | escritura | 2 |
 | `x` | ejecución | 1 |
@@ -145,7 +145,7 @@ echo "Soy ${nombre}Gorlat"            # llaves si va pegado a otro texto
 ### Parámetros
 
 | Variable | Significado |
-| --- | --- |
+|---|---|
 | `$0` | Nombre del script |
 | `$1`, `$2`, ... | Primer, segundo... parámetro |
 | `$#` | Número de parámetros recibidos |
@@ -180,7 +180,7 @@ fi
 ### Comparación de números
 
 | Operador | Significa |
-| --- | --- |
+|---|---|
 | `-eq` | igual (=) |
 | `-ne` | distinto (≠) |
 | `-gt` | mayor que (>) |
@@ -191,7 +191,7 @@ fi
 ### Comparación de textos
 
 | Operador | Significa |
-| --- | --- |
+|---|---|
 | `=` | iguales |
 | `!=` | distintos |
 | `-z "$x"` | cadena vacía |
@@ -200,7 +200,7 @@ fi
 ### Pruebas sobre archivos
 
 | Prueba | Es verdadera si... |
-| --- | --- |
+|---|---|
 | `-e ruta` | la ruta existe (sea lo que sea) |
 | `-f ruta` | existe y es un **archivo normal** |
 | `-d ruta` | existe y es un **directorio** |
@@ -357,7 +357,7 @@ fi
 ## 7. Errores típicos
 
 | Síntoma | Causa probable | Solución |
-| --- | --- | --- |
+|---|---|---|
 | `Permission denied` al ejecutar `./script.sh` | Falta permiso de ejecución | `chmod u+x script.sh` |
 | `command not found` | Falta `./` o la ruta | `./script.sh` |
 | `[: missing ]` o `[: =: unary operator expected` | Faltan espacios en `[ ]` o comillas en `"$1"` | `[ "$1" -eq 5 ]` |
@@ -375,3 +375,69 @@ fi
 - Mover/copiar/borrar: `mv` · `cp` · `rm` · `rmdir`
 - Permisos: `chmod u+x` · `chmod 754` · `ls -l`
 - Scripts: `#!/bin/bash` · `$1 $2 $#` · `if [ ] then elif else fi` · `-f -d -e -x`
+
+## 9. find, grep, wc, head y tail
+
+### find: buscar archivos por nombre o tipo
+
+```bash
+find ruta -type f                 # todos los archivos normales
+find ruta -type d                 # todos los directorios
+find ruta -name "*.txt"           # nombre que termina en .txt
+find ruta -iname "*.txt"          # igual, ignorando mayúsculas
+find . -type f -name "*.sh"       # combinar condiciones
+```
+
+- Estructura: `find <dónde buscar> <condiciones>`. `.` = el directorio actual.
+- **Pon el patrón entre comillas** (`"*.txt"`), si no la shell puede expandir el `*` antes de tiempo.
+- `-type f` = archivos normales, `-type d` = directorios.
+
+### grep: buscar texto dentro de archivos
+
+```bash
+grep "Linux" linux.txt            # líneas que contienen Linux
+grep -i "bash" archivo.txt        # ignora mayúsculas y minúsculas
+grep -n "Linux" linux.txt         # muestra el número de línea
+grep -c "Linux" linux.txt         # cuenta las líneas que coinciden
+grep -v "Linux" linux.txt         # líneas que NO contienen Linux
+grep -r "bash" carpeta/           # busca en todos los archivos de la carpeta
+grep -ri "bash" carpeta/          # recursivo e ignorando mayúsculas
+```
+
+| Opción | Significado |
+|---|---|
+| `-i` | ignorar mayúsculas/minúsculas |
+| `-n` | mostrar número de línea |
+| `-c` | contar líneas con coincidencia |
+| `-v` | invertir (líneas sin la palabra) |
+| `-r` | recursivo (entra en subdirectorios) |
+| `-w` | palabra completa |
+
+### wc, head y tail: contar y recortar
+
+```bash
+wc -l bash.txt          # número de líneas (muestra también el nombre)
+wc -l < bash.txt        # solo el número
+head -n 1 bash.txt      # primera línea
+tail -n 1 bash.txt      # última línea
+head -n 5 bash.txt      # primeras 5 líneas
+tail -n 5 bash.txt      # últimas 5 líneas
+```
+
+- Un archivo vacío (`touch vacio.txt`) da `0` con `wc -l vacio.txt`.
+- `wc -l` cuenta saltos de línea: si la última línea no termina en Enter, no la cuenta.
+
+### Qué comando va con cada tipo de pregunta
+
+| Si el enunciado dice... | Usa |
+|---|---|
+| «muestra todos los archivos normales de X» | `find X -type f` |
+| «archivos cuyo nombre termine en .txt» | `find . -name "*.txt"` |
+| «líneas que contienen la palabra Linux en linux.txt» | `grep "Linux" linux.txt` |
+| «ignorando mayúsculas y minúsculas» | `grep -i "bash" archivo` |
+| «cuenta cuántas líneas tiene» | `wc -l archivo` |
+| «primera línea» | `head -n 1 archivo` |
+| «última línea» | `tail -n 1 archivo` |
+| «archivo vacío, cuántas líneas» | `wc -l vacio.txt` (da 0) |
+
+**Tuberías (`|`):** la salida de un comando entra en el siguiente. Ej.: `grep -i "bash" archivo.txt | wc -l` cuenta cuántas líneas contienen bash.
